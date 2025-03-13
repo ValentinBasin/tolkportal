@@ -1,0 +1,20 @@
+# Use node image
+FROM node:latest
+
+# Define working directory
+WORKDIR /app
+
+# Copy package.json to working directory
+COPY package.json package-lock.json ./
+
+# Install dependecies
+RUN npm install
+
+# Copy code
+COPY . .
+
+# Expose ports
+EXPOSE 5173 24678
+
+# Run vite
+CMD ["npm", "run", "dev", "--", "--host"]

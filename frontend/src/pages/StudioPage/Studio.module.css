@@ -1,0 +1,119 @@
+.studio {
+  background-color: #e1ff76;
+  padding: 14.5625rem 0;
+}
+
+.studio__abstract {
+  position: relative;
+}
+
+.studio__abstract_blur {
+  top: 0;
+  position: absolute;
+  width: 42.5rem;
+  height: 42.5rem;
+  border-radius: 100%;
+  background-color: rgba(129, 255, 11, 0.1);
+  backdrop-filter: blur(0.525rem);
+  left: 3.125rem;
+  z-index: 2;
+}
+@media (max-width: 992px) {
+  .studio__abstract_blur {
+    width: 32rem;
+    height: 32rem;
+  }
+}
+@media (max-width: 768px) {
+  .studio__abstract_blur {
+    width: 20rem;
+    height: 20rem;
+    top: 100px;
+  }
+}
+
+.ticker {
+  position: absolute;
+  top: 35%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.ticker__wrapper {
+  display: flex;
+}
+
+.ticker__item {
+  font-size: 4.375rem;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 0 3.125rem;
+  animation: ticker 10s linear infinite;
+  font-family: var(--font-second);
+  font-weight: 700;
+  font-size: 7.5625rem;
+  line-height: 100%;
+  text-transform: uppercase;
+  color: #554dff;
+}
+@media (max-width: 992px) {
+  .ticker__item {
+    font-size: 3.375rem;
+  }
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateZ(0);
+  }
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.studio__text {
+  max-width: 51.875rem;
+  width: 100%;
+  text-align: right;
+  margin-left: auto;
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 1.75rem;
+  line-height: 120%;
+  color: var(--black);
+  position: relative;
+  margin-right: 11.875rem;
+}
+
+.studio__text:before {
+  content: '';
+  width: 4.5625rem;
+  height: 6.375rem;
+  position: absolute;
+  top: -20rem;
+  left: 50%;
+  background: url('../../assets/images/icons/arrow-down-text.svg') center /
+    cover no-repeat;
+}
+
+@media (max-width: 992px) {
+  .studio__text:before {
+    top: -7rem;
+  }
+  .studio__text {
+    font-size: 1.25rem;
+    max-width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  .studio__text:before {
+    display: none;
+  }
+}
+
+@media (max-width: 475px) {
+  .studio__abstract_blur {
+    top: -10px;
+  }
+}

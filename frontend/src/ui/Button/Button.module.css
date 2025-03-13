@@ -1,0 +1,38 @@
+.link {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: 1.75rem;
+  color: var(--black);
+  background-color: var(--lime);
+  padding: 1.4375rem 0.3125rem;
+  display: block;
+  max-width: 31.25rem;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  border-radius: 6.25rem;
+  position: relative;
+  z-index: 2;
+  transition: var(--transition-bg), var(--transition-color);
+}
+
+.link_modify {
+  background-color: var(--white);
+  border: 1px solid var(--black);
+  margin: 0;
+}
+
+@media (any-hover: hover) {
+  .link:hover {
+    color: var(--white);
+    background-color: var(--pink);
+  }
+}
+
+@media (max-width: 1140px) {
+  .link {
+    font-size: 1.25rem;
+    padding: 1.25rem 0.3125rem;
+    max-width: 20rem;
+  }
+}

@@ -1,0 +1,38 @@
+.rubric {
+  border: 0.0625rem dashed var(--black);
+  border-radius: 1.25rem;
+  padding: 1.875rem 0 4.375rem 0;
+  width: 100%;
+  display: none;
+}
+
+.rubric__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  width: 100%;
+}
+
+.rubric__text {
+  font-family: var(--font-second);
+  font-weight: bold;
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+  padding: 0 2rem;
+}
+
+.rubric__btn {
+  background-color: var(--lime);
+  border: none;
+  text-transform: uppercase;
+  font-family: var(--font-family);
+  padding: 1.5rem 0;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.rubric__btn_active {
+  background-color: var(--violet);
+  color: var(--white);
+}

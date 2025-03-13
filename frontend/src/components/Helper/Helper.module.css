@@ -1,0 +1,33 @@
+.helper {
+  padding-top: 7rem;
+  padding-bottom: 11.25rem;
+  background-color: var(--black);
+}
+
+.helper__title {
+  font-family: var(--font-second);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 4vw, 4.375rem);
+  line-height: 100%;
+  text-transform: uppercase;
+  text-align: center;
+  text-align: center;
+  text-wrap: balance;
+  margin-bottom: 9.1875rem;
+  color: var(--white);
+}
+
+.helper__images {
+  display: grid;
+  place-items: center;
+}
+
+@media (max-width: 768px) {
+  .helper {
+    padding-top: 3rem;
+    padding-bottom: 6rem;
+  }
+  .helper__title {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,14 @@
+.media {
+  padding: 5rem 0;
+}
+
+.media__wrapper {
+  gap: 1.5625rem;
+  margin-top: 1.25rem;
+}
+
+.media__articles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1.25rem;
+}

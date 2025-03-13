@@ -1,0 +1,35 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1.375rem;
+}
+
+.title {
+  font-family: var(--font-second);
+  font-weight: 700;
+  font-size: clamp(2.185rem, 4vw, 4.6875rem);
+  line-height: 95%;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.title_modify {
+  color: var(--white);
+}
+
+.text {
+  font-family: var(--font-family);
+  font-weight: 400;
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  line-height: 120%;
+  color: var(--black);
+  max-width: 21rem;
+  width: 100%;
+}
+@media (max-width: 48rem) {
+  .wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
