@@ -13,7 +13,7 @@ function MediaPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       const data = await fetchData(
-        'https://tolkadminka.ru/wp-json/wp/v2/posts?categories=3',
+        'http://localhost:1337/api/articles',
       );
 
       setPosts(data);
