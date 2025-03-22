@@ -4,20 +4,20 @@ import { useState, useEffect } from 'react';
 import { fetchData } from '../../function';
 import { Link } from 'react-router-dom';
 function PopularItem({ post }) {
-  const [img, setImg] = useState();
+  // const [img, setImg] = useState();
 
-  const title = post.title.rendered;
-  const desc = post.excerpt.rendered;
-  const url = post._links['wp:featuredmedia'][0].href;
+  const title = post.title;
+  const desc = post.excerpt;
+  const img = post.smallImageUrl;
 
-  useEffect(() => {
-    const fetchImg = async () => {
-      const data = await fetchData(url);
-      setImg(data.source_url);
-    };
-
-    fetchImg();
-  }, [post]);
+  // useEffect(() => {
+  //   const fetchImg = async () => {
+  //     const data = await fetchData(url);
+  //     setImg(data.source_url);
+  //   };
+  //
+  //   fetchImg();
+  // }, [post]);
 
   return (
     <div className={styles.item}>

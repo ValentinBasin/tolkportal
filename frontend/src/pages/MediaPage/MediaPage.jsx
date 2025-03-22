@@ -12,13 +12,12 @@ function MediaPage() {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      const backendUrl = import.meta.env.VITE_STRAPI_API_URL;
       const data = await fetchData(
-        'http://localhost:1337/api/articles',
+        `${backendUrl}/api/articles?populate=image`,
       );
-
       setPosts(data);
     };
-
     fetchPosts();
   }, []);
 
