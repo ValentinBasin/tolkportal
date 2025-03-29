@@ -1,23 +1,9 @@
-/* eslint-disable react/prop-types */
-import styles from './Popular.module.css';
-import { useState, useEffect } from 'react';
-import { fetchData } from '../../function';
-import { Link } from 'react-router-dom';
+import styles from "./Popular.module.css";
+import { Link } from "react-router-dom";
 function PopularItem({ post }) {
-  // const [img, setImg] = useState();
-
   const title = post.title;
   const desc = post.excerpt;
   const img = post.smallImageUrl;
-
-  // useEffect(() => {
-  //   const fetchImg = async () => {
-  //     const data = await fetchData(url);
-  //     setImg(data.source_url);
-  //   };
-  //
-  //   fetchImg();
-  // }, [post]);
 
   return (
     <div className={styles.item}>

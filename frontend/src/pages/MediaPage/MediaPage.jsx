@@ -1,11 +1,11 @@
-import Header from '../../components/Header/Header';
-import Footer from '../../components/footer/Footer';
-import DoubleTitles from '../../ui/DoubleTitles/DoubleTitles';
-import PopularItem from '../../components/popular/PopularItem';
-import styles from './Media.module.css';
-import { fetchData } from '../../function';
-import { useState, useEffect } from 'react';
-import Rubric from '../../components/Rubric/Rubric';
+import Header from "../../components/Header/Header";
+import Footer from "../../components/footer/Footer";
+import DoubleTitles from "../../ui/DoubleTitles/DoubleTitles";
+import PopularItem from "../../components/popular/PopularItem";
+import styles from "./Media.module.css";
+import { fetchData } from "../../function";
+import { useState, useEffect } from "react";
+import Rubric from "../../components/Rubric/Rubric";
 
 function MediaPage() {
   const [posts, setPosts] = useState([]);
@@ -13,9 +13,7 @@ function MediaPage() {
   useEffect(() => {
     const fetchPosts = async () => {
       const backendUrl = import.meta.env.VITE_STRAPI_API_URL;
-      const data = await fetchData(
-        `${backendUrl}/api/articles?populate=image`,
-      );
+      const data = await fetchData(`${backendUrl}/api/articles?populate=image`);
       setPosts(data);
     };
     fetchPosts();

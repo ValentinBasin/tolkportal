@@ -1,14 +1,10 @@
-import Container from '../../ui/Container/Container';
-import Button from '../../ui/Button/Button';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import styles from './Studio.module.css';
-import img1 from '../../assets/images/studio/01.jpg';
-import img2 from '../../assets/images/studio/02.jpg';
-import img3 from '../../assets/images/studio/03.jpg';
-import img4 from '../../assets/images/studio/04.jpg';
-import { fetchData } from '../../function.js';
-import { useState, useEffect } from 'react';
-import Item from './StudioItem.jsx';
+import Container from "../../ui/Container/Container";
+import Button from "../../ui/Button/Button";
+import { Swiper, SwiperSlide } from "swiper/react";
+import styles from "./Studio.module.css";
+import { fetchData } from "../../function.js";
+import { useState, useEffect } from "react";
+import Item from "./StudioItem.jsx";
 
 const sliderSettings = {
   spaceBetween: 100,
@@ -34,9 +30,7 @@ function Studio() {
   useEffect(() => {
     const fetchPosts = async () => {
       const backendUrl = import.meta.env.VITE_STRAPI_API_URL;
-      const data = await fetchData(
-        `${backendUrl}/api/teams?populate=image`,
-      );
+      const data = await fetchData(`${backendUrl}/api/teams?populate=image`);
       setPosts(data);
     };
 

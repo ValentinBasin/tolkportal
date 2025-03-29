@@ -1,10 +1,6 @@
-/* eslint-disable react/prop-types */
-import styles from './Studio.module.css';
-import { useState, useEffect } from 'react';
-import { fetchData } from '../../function';
+import styles from "./Studio.module.css";
 
 function Item({ post }) {
-
   const title = post.title;
   const desc = post.desc;
   const img = post.imageUrl;
