@@ -33,8 +33,9 @@ function Studio() {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      const backendUrl = import.meta.env.VITE_STRAPI_API_URL;
       const data = await fetchData(
-        'https://tolkadminka.ru/wp-json/wp/v2/photos_workers',
+        `${backendUrl}/api/teams?populate=image`,
       );
       setPosts(data);
     };
@@ -84,11 +85,7 @@ function Studio() {
           <Swiper {...sliderSettings} className="swiper-studio">
             {posts.map((post, index) => (
               <SwiperSlide key={index}>
-                <Item
-                  title={post.title.rendered}
-                  desc={post.content.rendered}
-                  link={post}
-                />
+                <Item post={post} />
               </SwiperSlide>
             ))}
           </Swiper>

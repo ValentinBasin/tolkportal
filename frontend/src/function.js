@@ -11,6 +11,7 @@ export const fetchData = async (url) => {
       imageUrl: item.image?.url ? `${import.meta.env.VITE_STRAPI_API_URL}${item.image.url}` : null,
       smallImageUrl: item.image?.formats?.small?.url ? `${import.meta.env.VITE_STRAPI_API_URL}${item.image.formats.small.url}` : null, 
       date: item.publishedAt,
+      desc: item.desc,
     });
     const formattedData = Array.isArray(strapiData) ? strapiData.map(normalizeData) : normalizeData(strapiData);
     return formattedData;
@@ -34,11 +35,11 @@ export const formatDate = (date) => {
   })
 }
 
-export const getImageAcf = async (id) => {
-  const response = await axios.get(`https://tolkadminka.ru/wp-json/wp/v2/media/${id}`);
-
-  return response.data.source_url;
-}
+// export const getImageAcf = async (id) => {
+//   const response = await axios.get(`https://tolkadminka.ru/wp-json/wp/v2/media/${id}`);
+//
+//   return response.data.source_url;
+// }
 
 
 export const scrollTop = () => {
