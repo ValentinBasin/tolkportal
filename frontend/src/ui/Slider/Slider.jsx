@@ -18,8 +18,9 @@ function Slider() {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      const backendUrl = import.meta.env.VITE_STRAPI_API_URL;
       const data = await fetchData(
-        'https://tolkadminka.ru/wp-json/wp/v2/posts?categories=2',
+        `${backendUrl}/api/articles?populate=image`,
       );
       setPosts(data);
     };

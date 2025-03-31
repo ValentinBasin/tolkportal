@@ -1,26 +1,9 @@
-/* eslint-disable react/prop-types */
-import styles from './Studio.module.css';
-import { useState, useEffect } from 'react';
-import { fetchData } from '../../function';
+import styles from "./Studio.module.css";
 
-function Item({ ...props }) {
-  const [img, setImg] = useState();
-
-  const title = props.title;
-  const desc = props.desc;
-  const link = props.link;
-
-  const url = link._links['wp:featuredmedia'][0].href;
-
-  useEffect(() => {
-    const fetchImage = async () => {
-      const data = await fetchData(url);
-
-      setImg(data.source_url);
-    };
-
-    fetchImage();
-  }, [link]);
+function Item({ post }) {
+  const title = post.title;
+  const desc = post.desc;
+  const img = post.imageUrl;
 
   return (
     <div className={styles.block}>
