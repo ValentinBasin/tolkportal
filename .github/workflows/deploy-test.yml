@@ -21,12 +21,12 @@ jobs:
 
       - name: Build and push Backend image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:test .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backend:test .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backend:test
         working-directory: backend
 
       - name: Build and push Frontend image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/myapp:test .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test
         working-directory: frontend
