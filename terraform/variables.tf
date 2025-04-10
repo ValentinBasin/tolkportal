@@ -32,13 +32,13 @@ variable "server_name" {
   default = "tolkportal"
 }
 
-variable "aws_region" {
-  type = string
-}
-
-variable "backup_bucket_name" {
-  type = string
-}
+# variable "aws_region" {
+#   type = string
+# }
+#
+# variable "backup_bucket_name" {
+#   type = string
+# }
 
 variable "ssh_key" {
   type = string
