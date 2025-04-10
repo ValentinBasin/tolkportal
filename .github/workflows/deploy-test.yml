@@ -19,13 +19,37 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Check if backend/ changed
+        id: changes_backend
+        run: |
+          if git diff --quiet HEAD^ HEAD -- backend/; then
+            echo "no changes"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes found"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build and push Backend image
+        if: steps.changes_backend.outputs.changed == 'true'
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backend:test .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backend:test
         working-directory: backend
 
+      - name: Check if frontend/ changed
+        id: changes_frontend
+        run: |
+          if git diff --quiet HEAD^ HEAD -- frontend/; then
+            echo "no changes"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes found"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build and push Frontend image
+        if: steps.changes_frontend.outputs.changed == 'true'
         run: |
           docker build --build-arg VITE_STRAPI_API_URL=${{ vars.TEST_API_URL }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test
