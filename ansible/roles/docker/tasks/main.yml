@@ -1,0 +1,5 @@
+- name: Install Docker
+  ansible.builtin.import_tasks: install.yml
+
+- name: Add app user
+  ansible.builtin.import_tasks: app_user.yml

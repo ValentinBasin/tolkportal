@@ -70,7 +70,7 @@ jobs:
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_server_name: ${{ vars.SERVER_NAME }}
       TF_VAR_zone_id: ${{ vars.ZONE_ID }}
-      TF_VAR_ssh_key: ${{ secrets.SSH_KEY }}
+      TF_VAR_ssh_key: ${{ secrets.TEST_SSH_PUB_KEY }}
       # TF_VAR_aws_region: ${{ vars.AWS_REGION }}
       # TF_VAR_backup_bucket_name: ${{ vars.AWS_BACKUP_BUCKET }}
 
@@ -116,3 +116,68 @@ jobs:
           #echo "$(terraform output -json)" > $GITHUB_WORKSPACE/terraform_outputs.json 
           cat -A $GITHUB_WORKSPACE/terraform_outputs.json
           od -c $GITHUB_WORKSPACE/terraform_outputs.json
+
+  ansible:
+    needs: terraform
+    runs-on: ubuntu-latest
+
+    env:
+      DB_USER: ${{ secrets.TEST_DB_USER }}
+      DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+      DB_NAME: ${{ secrets.TEST_DB_NAME }}
+      IMAGE_TAG: "test"
+      NODE_ENV: "testing"
+      DOMAIN_NAME: ${{ var.TEST_DOMAIN_NAME }}
+      SSH_PUB_KEY: ${{ secrets.TEST_SSH_PUB_KEY }}
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ansible
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # - name: Download Terraform out
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: terraform-outputs
+      #
+      # - name: Read Terraform outputs
+      #   run: |
+      #     od -c $GITHUB_WORKSPACE/terraform_outputs.json
+      #     cat -A $GITHUB_WORKSPACE/terraform_outputs.json
+      #     export AWS_ACCESS_KEY=$(jq -r '.aws_access_key.value' ${{ github.workspace }}/terraform_outputs.json)
+      #     export AWS_SECRET_KEY=$(jq -r '.aws_secret_key.value' ${{ github.workspace }}/terraform_outputs.json)
+      #     echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> $GITHUB_ENV
+      #     echo "AWS_SECRET_KEY=$AWS_SECRET_KEY" >> $GITHUB_ENV
+
+      - name: Setup Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible
+
+      - name: Add SSH-key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TEST_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ vars.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Check deploy user connection
+        run: ssh -i ~/.ssh/id_ed25519 deploy@${{ vars.DEPLOY_HOST }} "echo 'Deploy user is available'"
+        continue-on-error: true
+
+      - name: Define root or user modules
+        id: check_user
+        run: |
+          if ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes deploy@${{ vars.DEPLOY_HOST }} "exit" 2>/dev/null; then
+            echo "user=deploy" >> $GITHUB_ENV
+          else
+            echo "user=root" >> $GITHUB_ENV
+          fi
+        continue-on-error: true
+
+      - name: Run playbook
+        run: ansible-playbook -i ${{ vars.DEPLOY_HOST }}, playbook.yml -u ${{ env.user }} --private-key ~/.ssh/id_ed25519
