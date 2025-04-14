@@ -127,7 +127,7 @@ jobs:
       DB_NAME: ${{ secrets.TEST_DB_NAME }}
       IMAGE_TAG: "test"
       NODE_ENV: "testing"
-      DOMAIN_NAME: ${{ var.TEST_DOMAIN_NAME }}
+      DOMAIN_NAME: ${{ secrets.TEST_DOMAIN_NAME }}
       SSH_PUB_KEY: ${{ secrets.TEST_SSH_PUB_KEY }}
 
     defaults:
