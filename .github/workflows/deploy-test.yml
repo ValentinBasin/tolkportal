@@ -161,7 +161,7 @@ jobs:
       - name: Add SSH-key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.TEST_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.TEST_SSH_PUB_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ vars.DEPLOY_HOST }} >> ~/.ssh/known_hosts
 
