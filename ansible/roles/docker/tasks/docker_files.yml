@@ -20,6 +20,14 @@
     owner: "tolkportal"
     group: "tolkportal"
 
+- name: Create directory
+  ansible.builtin.file:
+    path: /opt/tolkportal/nginx
+    state: directory
+    mode: "0700"
+    owner: tolkportal
+    group: tolkportal
+
 - name: Create Nginx config
   vars:
     domain_name: "{{ lookup('env', 'DOMAIN_NAME') }}"
