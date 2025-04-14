@@ -3,3 +3,6 @@
 
 - name: Add app user
   ansible.builtin.import_tasks: app_user.yml
+
+- name: Add docker files
+  ansible.builtin.import_tasks: docker_files.yml
