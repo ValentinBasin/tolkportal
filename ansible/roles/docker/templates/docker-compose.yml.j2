@@ -27,6 +27,9 @@ services:
       DATABASE_USERNAME: {{ db_user }}
       DATABASE_PASSWORD: {{ db_password }}
       NODE_ENV: {{ node_env }}
+      VIRTUAL_HOST: api.vbasin.org
+      LETSENCRYPT_HOST: api.vbasin.org
+      LETSENCRYPT_EMAIL: valentin@vbasin.org
     depends_on:
       - db
     networks:
@@ -38,20 +41,42 @@ services:
     restart: always
     expose:
       - "80"
+    environment:
+      VIRTUAL_HOST: tolkportal.vbasin.org
+      LETSENCRYPT_HOST: tolkportal.vbasin.org
+      LETSENCRYPT_EMAIL: valentin@vbasin.org
     networks:
       - app-network
 
-  nginx:
-    image: nginx
-    container_name: nginx
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - nginx-certs:/etc/nginx/certs
+      - nginx-vhost:/etc/nginx/vhost.d
+      - nginx-html:/usr/share/nginx/html
     depends_on:
       - frontend
       - backend
+    networks:
+      - app-network
+
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: acme-companion
+    depends_on:
+      - nginx-proxy
+    volumes_from:
+      - nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - acme:/etc/acme.sh
+    environment:
+      DEFAULT_EMAIL: valentin@vbasin.org
     networks:
       - app-network
 

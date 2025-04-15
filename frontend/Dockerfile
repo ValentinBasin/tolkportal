@@ -1,4 +1,3 @@
-# Use node image
 FROM node:latest AS build
 
 # Define working directory
