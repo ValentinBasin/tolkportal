@@ -28,12 +28,26 @@
     owner: tolkportal
     group: tolkportal
 
-- name: Create Nginx config
-  vars:
-    domain_name: "{{ lookup('env', 'DOMAIN_NAME') }}"
-  ansible.builtin.template:
-    src: nginx.conf.j2
-    dest: /opt/tolkportal/nginx/nginx.conf
+- name: Create directory
+  ansible.builtin.file:
+    path: /opt/tolkportal/nginx/custom
+    state: directory
     mode: "0700"
-    owner: "tolkportal"
-    group: "tolkportal"
+    owner: tolkportal
+    group: tolkportal
+
+- name: Create directory
+  ansible.builtin.file:
+    path: /opt/tolkportal/nginx/custom/vhost.d
+    state: directory
+    mode: "0700"
+    owner: tolkportal
+    group: tolkportal
+
+- name: Copy using inline content
+  ansible.builtin.copy:
+    content: "client_max_body_size 20M;"
+    dest: /opt/tolkportal/nginx/custom/vhost.d/api.myapp.org
+    owner: tolkportal
+    group: tolkportal
+    mode: "0700"
