@@ -25,7 +25,7 @@ function Popular() {
         title="Популярное"
         text="Популярные статьи из нашего новостного портала"
       />
-      // <Slider />
+      {/* <Slider /> */}
       <div className={styles.popular__items}>
         {posts.map((post, index) => (
           <PopularItem key={index} post={post} />
