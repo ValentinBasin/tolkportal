@@ -39,7 +39,7 @@
 - name: Copy using inline content
   ansible.builtin.copy:
     content: "client_max_body_size 20M;"
-    dest: /opt/tolkportal/nginx/vhost.d/api.myapp.org
+    dest: /opt/tolkportal/nginx/vhost.d/api.vbasin.org
     owner: tolkportal
     group: tolkportal
     mode: "0700"
