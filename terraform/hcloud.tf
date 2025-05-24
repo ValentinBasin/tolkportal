@@ -1,6 +1,6 @@
-# provider "hcloud" {
-#   token = var.hcloud_token
-# }
+provider "hcloud" {
+  token = var.hcloud_token
+}
 #
 # resource "hcloud_primary_ip" "ipv4" {
 #   name          = "primary_ipv4"
