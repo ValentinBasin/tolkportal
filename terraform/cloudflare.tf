@@ -13,8 +13,8 @@ resource "cloudflare_dns_record" "dns_a" {
   zone_id = var.zone_id
   name    = var.server_name
   type    = "A"
-  content = hcloud_server.server.ipv4_address
-  proxied = false
+  content = digitalocean_droplet.app_server.ipv4_address
+  proxied = true
   ttl     = 3600
 }
 
@@ -23,8 +23,8 @@ resource "cloudflare_dns_record" "dns_api_a" {
   zone_id = var.zone_id
   name    = "api"
   type    = "A"
-  content = hcloud_server.server.ipv4_address
-  proxied = false
+  content = digitalocean_droplet.app_server.ipv4_address
+  proxied = true
   ttl     = 3600
 }
 
@@ -33,8 +33,8 @@ resource "cloudflare_dns_record" "dns_aaaa" {
   zone_id = var.zone_id
   name    = var.server_name
   type    = "AAAA"
-  content = hcloud_server.server.ipv6_address
-  proxied = false
+  content = digitalocean_droplet.app_server.ipv6_address
+  proxied = true
   ttl     = 3600
 }
 
@@ -43,8 +43,7 @@ resource "cloudflare_dns_record" "dns_api_aaaa" {
   zone_id = var.zone_id
   name    = "api"
   type    = "AAAA"
-  content = hcloud_server.server.ipv6_address
-  proxied = false
+  content = digitalocean_droplet.app_server.ipv6_address
+  proxied = true
   ttl     = 3600
 }
-

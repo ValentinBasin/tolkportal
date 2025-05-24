@@ -43,3 +43,17 @@ variable "server_name" {
 variable "ssh_key" {
   type = string
 }
+
+variable "do_token" {
+  type = string
+}
+
+variable "do_region" {
+  type    = string
+  default = "fra1"
+}
+
+variable "do_vpc_name" {
+  type    = string
+  default = "tolkportal-vpc"
+}

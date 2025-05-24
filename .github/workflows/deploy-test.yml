@@ -71,6 +71,7 @@ jobs:
       TF_VAR_server_name: ${{ vars.SERVER_NAME }}
       TF_VAR_zone_id: ${{ vars.ZONE_ID }}
       TF_VAR_ssh_key: ${{ secrets.TEST_SSH_PUB_KEY }}
+      TF_VAR_do_token: ${{ secrets.TEST_DO_TOKEN }}
       # TF_VAR_aws_region: ${{ vars.AWS_REGION }}
       # TF_VAR_backup_bucket_name: ${{ vars.AWS_BACKUP_BUCKET }}
 
@@ -113,9 +114,14 @@ jobs:
         run: |
           terraform apply -auto-approve -input=false
           terraform output -json > $GITHUB_WORKSPACE/terraform_outputs.json 2>/dev/null
-          #echo "$(terraform output -json)" > $GITHUB_WORKSPACE/terraform_outputs.json 
           cat -A $GITHUB_WORKSPACE/terraform_outputs.json
           od -c $GITHUB_WORKSPACE/terraform_outputs.json
+
+      - name: Upload Terraform outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-outputs
+          path: ${{ github.workspace }}/terraform_outputs.json
 
   ansible:
     needs: terraform
@@ -139,19 +145,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # - name: Download Terraform out
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: terraform-outputs
-      #
-      # - name: Read Terraform outputs
-      #   run: |
-      #     od -c $GITHUB_WORKSPACE/terraform_outputs.json
-      #     cat -A $GITHUB_WORKSPACE/terraform_outputs.json
-      #     export AWS_ACCESS_KEY=$(jq -r '.aws_access_key.value' ${{ github.workspace }}/terraform_outputs.json)
-      #     export AWS_SECRET_KEY=$(jq -r '.aws_secret_key.value' ${{ github.workspace }}/terraform_outputs.json)
-      #     echo "AWS_ACCESS_KEY=$AWS_ACCESS_KEY" >> $GITHUB_ENV
-      #     echo "AWS_SECRET_KEY=$AWS_SECRET_KEY" >> $GITHUB_ENV
+      - name: Download Terraform out
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-outputs
+
+      - name: Read Terraform outputs
+        run: |
+          od -c $GITHUB_WORKSPACE/terraform_outputs.json
+          cat -A $GITHUB_WORKSPACE/terraform_outputs.json
+          export IP_ADDRESS=$(jq -r '.ip_address.value' ${{ github.workspace }}/terraform_outputs.json)
+          echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
 
       - name: Setup Ansible
         run: |
@@ -163,16 +167,16 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.TEST_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ vars.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ env.IP_ADDRESS }} >> ~/.ssh/known_hosts
 
       - name: Check deploy user connection
-        run: ssh -i ~/.ssh/id_ed25519 deploy@${{ vars.DEPLOY_HOST }} "echo 'Deploy user is available'"
+        run: ssh -i ~/.ssh/id_ed25519 deploy@${{ env.IP_ADDRESS }} "echo 'Deploy user is available'"
         continue-on-error: true
 
       - name: Define root or user modules
         id: check_user
         run: |
-          if ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes deploy@${{ vars.DEPLOY_HOST }} "exit" 2>/dev/null; then
+          if ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes deploy@${{ env.IP_ADDRESS }} "exit" 2>/dev/null; then
             echo "user=deploy" >> $GITHUB_ENV
           else
             echo "user=root" >> $GITHUB_ENV
@@ -180,4 +184,4 @@ jobs:
         continue-on-error: true
 
       - name: Run playbook
-        run: ansible-playbook -i ${{ vars.DEPLOY_HOST }}, playbook.yml -u ${{ env.user }} --private-key ~/.ssh/id_ed25519
+        run: ansible-playbook -i ${{ vars.IP_ADDRESS }}, playbook.yml -u ${{ env.user }} --private-key ~/.ssh/id_ed25519
