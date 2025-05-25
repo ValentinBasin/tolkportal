@@ -193,7 +193,9 @@ jobs:
           username: ${{ env.user }}
           key: ${{ secrets.TEST_SSH_KEY }}
           script: |
-            sudo -u tolkportal cd /opt/tolkportal
-            sudo -u tolkportal docker compose pull
-            sudo -u tolkportal docker compose up -d
-            sudo -u tolkportal docker image prune -f
+            sudo -u tolkportal bash -c '
+              cd /opt/tolkportal
+              docker compose pull
+              docker compose up -d
+              docker image prune -f
+            '
