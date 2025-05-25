@@ -185,3 +185,15 @@ jobs:
 
       - name: Run playbook
         run: ansible-playbook -i ${{ env.IP_ADDRESS }}, playbook.yml -u ${{ env.user }} --private-key ~/.ssh/id_ed25519
+
+      - name: Deploy to Remote Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.IP_ADDRESS }}
+          username: ${{ env.user }}
+          key: ${{ secrets.TEST_SSH_KEY }}
+          script: |
+            sudo -u tolkportal cd /opt/tolkportal
+            sudo -u tolkportal docker compose pull
+            sudo -u tolkportal docker compose up -d
+            sudo -u tolkportal docker image prune -f
