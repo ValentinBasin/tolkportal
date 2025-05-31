@@ -30,6 +30,7 @@ services:
       VIRTUAL_HOST: api.vbasin.org
       LETSENCRYPT_HOST: api.vbasin.org
       LETSENCRYPT_EMAIL: valentin@vbasin.org
+      FRONTEND_URL: https://tolkportal.vbasin.org
     depends_on:
       - db
     networks:
@@ -43,6 +44,7 @@ services:
       - "80"
     environment:
       VIRTUAL_HOST: tolkportal.vbasin.org
+      VIRTUAL_PORT: 80
       LETSENCRYPT_HOST: tolkportal.vbasin.org
       LETSENCRYPT_EMAIL: valentin@vbasin.org
     networks:
