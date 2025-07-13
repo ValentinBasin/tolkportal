@@ -14,7 +14,7 @@ resource "cloudflare_dns_record" "dns_a" {
   type    = "A"
   content = hcloud_server.server.ipv4_address
   proxied = true
-  ttl     = 3600
+  ttl     = 1
 }
 
 resource "cloudflare_dns_record" "dns_api_a" {
@@ -23,7 +23,7 @@ resource "cloudflare_dns_record" "dns_api_a" {
   type    = "A"
   content = hcloud_server.server.ipv4_address
   proxied = true
-  ttl     = 3600
+  ttl     = 1
 }
 
 resource "cloudflare_dns_record" "dns_aaaa" {
@@ -32,7 +32,7 @@ resource "cloudflare_dns_record" "dns_aaaa" {
   type    = "AAAA"
   content = hcloud_server.server.ipv6_address
   proxied = true
-  ttl     = 3600
+  ttl     = 1
 }
 
 resource "cloudflare_dns_record" "dns_api_aaaa" {
@@ -41,5 +41,5 @@ resource "cloudflare_dns_record" "dns_api_aaaa" {
   type    = "AAAA"
   content = hcloud_server.server.ipv6_address
   proxied = true
-  ttl     = 3600
+  ttl     = 1
 }
