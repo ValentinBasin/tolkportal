@@ -69,7 +69,7 @@ jobs:
       - name: Build and push Frontend image
         if: steps.changes_frontend.outputs.changed == 'true' || steps.changes_vars.outputs.changed == 'true'
         run: |
-          docker build --build-arg VITE_STRAPI_API_URL=${{ "https://" + env.API_SUBDOMAIN_NAME + "." + env.DOMAIN_NAME }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test .
+          docker build --build-arg VITE_STRAPI_API_URL=${{ format('https://{0}.{1}', env.API_SUBDOMAIN_NAME, env.DOMAIN_NAME) }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test
         working-directory: frontend
 
