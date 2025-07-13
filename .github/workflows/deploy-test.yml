@@ -148,7 +148,9 @@ jobs:
           path: ${{ github.workspace }}/terraform_outputs.json
 
   ansible:
-    needs: terraform
+    needs:
+      - terraform
+      - build-and-push
     runs-on: ubuntu-latest
 
     env:
