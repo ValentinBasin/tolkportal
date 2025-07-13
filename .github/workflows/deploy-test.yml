@@ -85,9 +85,9 @@ jobs:
       TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_server_name: ${{ vars.TEST_SERVER_NAME }}
-      TF_VAR_domain_name: ${{ env.DOMAIN_NAME }}
-      TF_VAR_subdomain_name: ${{ env.SUBDOMAIN_NAME }}
-      TF_VAR_API_SUBDOMAIN_NAME: ${{ env.API_SUBDOMAIN_NAME }}
+      # TF_VAR_domain_name: ${{ env.DOMAIN_NAME }}
+      # TF_VAR_subdomain_name: ${{ env.SUBDOMAIN_NAME }}
+      # TF_VAR_API_SUBDOMAIN_NAME: ${{ env.API_SUBDOMAIN_NAME }}
       TF_VAR_ssh_key: ${{ secrets.TEST_SSH_PUB_KEY }}
       # TF_VAR_zone_id: ${{ vars.ZONE_ID }}
       # TF_VAR_do_token: ${{ secrets.TEST_DO_TOKEN }}
@@ -105,6 +105,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Create variables
+        run: |
+          echo TF_VAR_domain_name=$DOMAIN_NAME
+          echo TF_VAR_subdomain_name=$SUBDOMAIN_NAME
+          echo TF_VAR_api_subdomain_name=$API_SUBDOMAIN_NAME
       # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
