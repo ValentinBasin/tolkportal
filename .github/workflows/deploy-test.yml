@@ -5,7 +5,8 @@ on:
     branches:
       - test
 
-env:
+# env:
+vars:
   API_SUBDOMAIN_NAME: "testapi"
   SUBDOMAIN_NAME: "test"
   DOMAIN_NAME: "klotspace.com"
@@ -69,7 +70,7 @@ jobs:
       - name: Build and push Frontend image
         if: steps.changes_frontend.outputs.changed == 'true' || steps.changes_vars.outputs.changed == 'true'
         run: |
-          docker build --build-arg VITE_STRAPI_API_URL=${{ format('https://{0}.{1}', env.API_SUBDOMAIN_NAME, env.DOMAIN_NAME) }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test .
+          docker build --build-arg VITE_STRAPI_API_URL=${{ format('https://{0}.{1}', vars.API_SUBDOMAIN_NAME, vars.DOMAIN_NAME) }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test
         working-directory: frontend
 
@@ -85,9 +86,9 @@ jobs:
       TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_server_name: ${{ vars.TEST_SERVER_NAME }}
-      TF_VAR_domain_name: ${{ env.DOMAIN_NAME }}
-      TF_VAR_subdomain_name: ${{ env.SUBDOMAIN_NAME }}
-      TF_VAR_API_SUBDOMAIN_NAME: ${{ env.API_SUBDOMAIN_NAME }}
+      TF_VAR_domain_name: ${{ vars.DOMAIN_NAME }}
+      TF_VAR_subdomain_name: ${{ vars.SUBDOMAIN_NAME }}
+      TF_VAR_API_SUBDOMAIN_NAME: ${{ vars.API_SUBDOMAIN_NAME }}
       TF_VAR_ssh_key: ${{ secrets.TEST_SSH_PUB_KEY }}
       # TF_VAR_zone_id: ${{ vars.ZONE_ID }}
       # TF_VAR_do_token: ${{ secrets.TEST_DO_TOKEN }}
@@ -152,9 +153,9 @@ jobs:
       DB_NAME: ${{ secrets.TEST_DB_NAME }}
       IMAGE_TAG: "test"
       NODE_ENV: "testing"
-      # DOMAIN_NAME: ${{ secrets.TEST_DOMAIN_NAME }}
-      # SUBDOMAIN_NAME: ${{ vars.TEST_SUBDOMAIN_NAME }}
-      # API_SUBDOMAIN_NAME: ${{ vars.TEST_API_SUBDOMAIN_NAME }}
+      DOMAIN_NAME: ${{ vars.DOMAIN_NAME }}
+      SUBDOMAIN_NAME: ${{ vars.SUBDOMAIN_NAME }}
+      API_SUBDOMAIN_NAME: ${{ vars.API_SUBDOMAIN_NAME }}
       SSH_PUB_KEY: ${{ secrets.TEST_SSH_PUB_KEY }}
       LETSENCRYPT_EMAIL: ${{ vars.LETSENCRYPT_EMAIL }}
 
