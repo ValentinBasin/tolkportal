@@ -107,9 +107,9 @@ jobs:
 
       - name: Create variables
         run: |
-          echo TF_VAR_domain_name=$DOMAIN_NAME
-          echo TF_VAR_subdomain_name=$SUBDOMAIN_NAME
-          echo TF_VAR_api_subdomain_name=$API_SUBDOMAIN_NAME
+          echo TF_VAR_domain_name=$DOMAIN_NAME >> $GITHUB_ENV
+          echo TF_VAR_subdomain_name=$SUBDOMAIN_NAME >> $GITHUB_ENV
+          echo TF_VAR_api_subdomain_name=$API_SUBDOMAIN_NAME >> $GITHUB_ENV
       # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
