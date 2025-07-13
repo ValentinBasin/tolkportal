@@ -13,6 +13,10 @@
     db_name: "{{ lookup('env', 'DB_NAME') }}"
     image_tag: "{{ lookup('env', 'IMAGE_TAG') }}"
     node_env: "{{ lookup('env', 'NODE_ENV') }}"
+    domain_name: "{{ lookup('env', 'DOMAIN_NAME') }}"
+    subdomain_name: "{{ lookup('env', 'SUBDOMAIN_NAME') }}"
+    api_subdomain_name: "{{ lookup('env', 'API_SUBDOMAIN_NAME') }}"
+    letsencrypt_email: "{{ lookup('env', 'LETSENCRYPT_EMAIL') }}"
   ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: /opt/tolkportal/docker-compose.yml
@@ -37,9 +41,12 @@
     group: tolkportal
 
 - name: Copy using inline content
+  vars:
+    domain_name: "{{ lookup('env', 'DOMAIN_NAME') }}"
+    api_subdomain_name: "{{ lookup('env', 'API_SUBDOMAIN_NAME') }}"
   ansible.builtin.copy:
     content: "client_max_body_size 20M;"
-    dest: /opt/tolkportal/nginx/vhost.d/api.vbasin.org
+    dest: /opt/tolkportal/nginx/vhost.d/{{ subdomain_name ~ "." ~ domain_name }}
     owner: tolkportal
     group: tolkportal
     mode: "0700"

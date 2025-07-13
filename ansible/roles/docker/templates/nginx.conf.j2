@@ -9,7 +9,7 @@ http {
 
   server {
     listen 80;
-    server_name tolkportal.{{ domain_name }};
+    server_name {{ domain_name if subdomain_name == "@" else subdomain_name ~ "." ~ domain_name }}
 
     location / {
       proxy_pass http://frontend:80/;
@@ -20,7 +20,7 @@ http {
 
   server {
     listen 80;
-    server_name api.{{ domain_name }};
+    server_name {{ api_subdomain_name ~ "." ~ domain_name }}
 
     location / {
       proxy_pass http://backend:1337;

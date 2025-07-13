@@ -16,8 +16,8 @@ resource "digitalocean_ssh_key" "my_key" {
 resource "digitalocean_droplet" "app_server" {
   name     = "tolkportal"
   region   = var.do_region
-  image    = "ubuntu-24-04-x64"
-  size     = "s-1vcpu-2gb"
+  image    = var.image
+  size     = var.server_type
   vpc_uuid = digitalocean_vpc.app_vpc.id
   ssh_keys = [digitalocean_ssh_key.my_key.id]
   ipv6     = true
@@ -54,4 +54,3 @@ resource "digitalocean_firewall" "app_firewall" {
 output "ip_address" {
   value = digitalocean_droplet.app_server.ipv4_address
 }
-

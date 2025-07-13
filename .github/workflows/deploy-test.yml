@@ -21,7 +21,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Check if backend/ changed
+      - name: Check if backend changed
         id: changes_backend
         run: |
           if git diff --quiet HEAD^ HEAD -- backend/; then
@@ -68,10 +68,13 @@ jobs:
       AWS_REGION: ${{secrets.AWS_REGION}}
       TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      TF_VAR_server_name: ${{ vars.SERVER_NAME }}
-      TF_VAR_zone_id: ${{ vars.ZONE_ID }}
+      TF_VAR_server_name: ${{ vars.TEST_SERVER_NAME }}
+      TF_VAR_domain_name: ${{ vars.TEST_DOMAIN_NAME }}
+      TF_VAR_subdomain_name: ${{ vars.TEST_SUBDOMAIN_NAME }}
+      TF_VAR_API_SUBDOMAIN_NAME: ${{ vars.TEST_API_SUBDOMAIN_NAME }}
       TF_VAR_ssh_key: ${{ secrets.TEST_SSH_PUB_KEY }}
-      TF_VAR_do_token: ${{ secrets.TEST_DO_TOKEN }}
+      # TF_VAR_zone_id: ${{ vars.ZONE_ID }}
+      # TF_VAR_do_token: ${{ secrets.TEST_DO_TOKEN }}
       # TF_VAR_aws_region: ${{ vars.AWS_REGION }}
       # TF_VAR_backup_bucket_name: ${{ vars.AWS_BACKUP_BUCKET }}
 
@@ -97,7 +100,7 @@ jobs:
         run: |
           terraform init \
           -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}" \
-          -backend-config="key=${{ vars.TF_STATE_KEY }}" \
+          -backend-config="key=${{ vars.TEST_TF_STATE_KEY }}" \
           -backend-config="region=${{ vars.TF_STATE_REGION }}"
 
         # Checks that all Terraform configuration files adhere to a canonical format
@@ -134,7 +137,10 @@ jobs:
       IMAGE_TAG: "test"
       NODE_ENV: "testing"
       DOMAIN_NAME: ${{ secrets.TEST_DOMAIN_NAME }}
+      SUBDOMAIN_NAME: ${{ vars.TEST_SUBDOMAIN_NAME }}
+      API_SUBDOMAIN_NAME: ${{ vars.TEST_API_SUBDOMAIN_NAME }}
       SSH_PUB_KEY: ${{ secrets.TEST_SSH_PUB_KEY }}
+      LETSENCRYPT_EMAIL: ${{ vars.LETSENCRYPT_EMAIL }}
 
     defaults:
       run:

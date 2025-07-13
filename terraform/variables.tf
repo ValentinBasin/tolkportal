@@ -23,13 +23,27 @@ variable "datacenter" {
   default = "fsn1-dc14"
 }
 
-variable "zone_id" {
+# variable "zone_id" {
+#   type = string
+# }
+
+variable "domain_name" {
   type = string
+}
+
+variable "subdomain_name" {
+  type    = string
+  default = "@"
+}
+
+variable "api_subdomain_name" {
+  type    = string
+  default = "api"
 }
 
 variable "server_name" {
   type    = string
-  default = "tolkportal"
+  default = "klot"
 }
 
 # variable "aws_region" {
@@ -44,16 +58,16 @@ variable "ssh_key" {
   type = string
 }
 
-variable "do_token" {
-  type = string
-}
-
-variable "do_region" {
-  type    = string
-  default = "fra1"
-}
-
-variable "do_vpc_name" {
-  type    = string
-  default = "tolkportal-vpc"
-}
+# variable "do_token" {
+#   type = string
+# }
+#
+# variable "do_region" {
+#   type    = string
+#   default = "fra1"
+# }
+#
+# variable "do_vpc_name" {
+#   type    = string
+#   default = "tolkportal-vpc"
+# }
