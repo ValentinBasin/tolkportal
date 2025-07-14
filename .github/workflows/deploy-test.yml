@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Load variables from file
         id: load-vars
-        uses: sergei-b/yaml-load-action@v1.1
+        uses: zlatko-ms/varfiletoenv@v3
         with:
           yaml_file: ".github/configs/test_vars.yml"
 
