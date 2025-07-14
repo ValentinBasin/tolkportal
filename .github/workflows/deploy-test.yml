@@ -25,6 +25,9 @@ jobs:
           echo "DOMAIN_NAME=$DOMAIN_NAME" >> "$GITHUB_OUTPUT"
           echo "SUBDOMAIN_NAME=$SUBDOMAIN_NAME" >> "$GITHUB_OUTPUT"
           echo "API_SUBDOMAIN_NAME=$API_SUBDOMAIN_NAME" >> "$GITHUB_OUTPUT"
+          echo "DOMAIN_NAME=$DOMAIN_NAME" 
+          echo "SUBDOMAIN_NAME=$SUBDOMAIN_NAME" 
+          echo "API_SUBDOMAIN_NAME=$API_SUBDOMAIN_NAME"
 
   build-and-push:
     environment: test
