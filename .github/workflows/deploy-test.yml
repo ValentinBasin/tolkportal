@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Load variables from file
-        id: load-vars
+        id: load_vars
         run: |
           DOMAIN_NAME=$(yq e '.DOMAIN_NAME' .github/configs/test_vars.yml)
           SUBDOMAIN_NAME=$(yq e '.SUBDOMAIN_NAME' .github/configs/test_vars.yml)
@@ -25,9 +25,6 @@ jobs:
           echo "DOMAIN_NAME=$DOMAIN_NAME" >> "$GITHUB_OUTPUT"
           echo "SUBDOMAIN_NAME=$SUBDOMAIN_NAME" >> "$GITHUB_OUTPUT"
           echo "API_SUBDOMAIN_NAME=$API_SUBDOMAIN_NAME" >> "$GITHUB_OUTPUT"
-          echo "DOMAIN_NAME=$DOMAIN_NAME" 
-          echo "SUBDOMAIN_NAME=$SUBDOMAIN_NAME" 
-          echo "API_SUBDOMAIN_NAME=$API_SUBDOMAIN_NAME"
 
   build-and-push:
     environment: test
