@@ -9,9 +9,9 @@ jobs:
   load-variables:
     runs-on: ubuntu-latest
     outputs:
-      API_SUBDOMAIN_NAME: steps.load_vars.outputs.domain_name
-      SUBDOMAIN_NAME: steps.load_vars.outputs.subdomain_name
-      DOMAIN_NAME: steps.load_vars.outputs.api_subdomain_name
+      DOMAIN_NAME: ${{ steps.load_vars.outputs.domain_name }}
+      SUBDOMAIN_NAME: ${{ steps.load_vars.outputs.subdomain_name }}
+      API_SUBDOMAIN_NAME: ${{ steps.load_vars.outputs.api_subdomain_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
