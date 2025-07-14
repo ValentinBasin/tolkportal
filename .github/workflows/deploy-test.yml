@@ -9,12 +9,12 @@ jobs:
   load-variables:
     runs-on: ubuntu-latest
     outputs:
-      API_SUBDOMAIN_NAME: "testapi"
-      SUBDOMAIN_NAME: "test"
-      DOMAIN_NAME: "klotspace.com"
+      API_SUBDOMAIN_NAME: steps.load_vars.outputs.domain_name
+      SUBDOMAIN_NAME: steps.load_vars.outputs.subdomain_name
+      DOMAIN_NAME: steps.load_vars.outputs.api_subdomain_name
     steps:
       - name: Checkout code
-        uses: actions/checkout@4
+        uses: actions/checkout@v4
       - name: Load variables from file
         id: load-vars
         uses: sergei-b/yaml-load-action@v1.1
