@@ -8,18 +8,19 @@ on:
 jobs:
   load-variables:
     runs-on: ubuntu-latest
-    outputs:
-      DOMAIN_NAME: ${{ steps.load_vars.outputs.domain_name }}
-      SUBDOMAIN_NAME: ${{ steps.load_vars.outputs.subdomain_name }}
-      API_SUBDOMAIN_NAME: ${{ steps.load_vars.outputs.api_subdomain_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Load variables from file
         id: load-vars
-        uses: zlatko-ms/varfiletoenv@v3
-        with:
-          paths: ".github/configs/test_vars.yml"
+        run: |
+          DOMAIN_NAME=$(yq e '.DOMAIN_NAME' .github/configs/test_vars.yml)
+          SUBDOMAIN_NAME=$(yq e '.SUBDOMAIN_NAME' .github/configs/test_vars.yml)
+          API_SUBDOMAIN_NAME=$(yq e '.API_SUBDOMAIN_NAME' .github/configs/test_vars.yml)
+
+          echo "DOMAIN_NAME=$DOMAIN_NAME" >> "$GITHUB_OUTPUT"
+          echo "SUBDOMAIN_NAME=$SUBDOMAIN_NAME" >> "$GITHUB_OUTPUT"
+          echo "API_SUBDOMAIN_NAME=$API_SUBDOMAIN_NAME" >> "$GITHUB_OUTPUT"
 
   build-and-push:
     environment: test
