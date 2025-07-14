@@ -5,14 +5,25 @@ on:
     branches:
       - test
 
-env:
-  API_SUBDOMAIN_NAME: "testapi"
-  SUBDOMAIN_NAME: "test"
-  DOMAIN_NAME: "klotspace.com"
-
 jobs:
+  load-variables:
+    runs-on: ubuntu-latest
+    outputs:
+      API_SUBDOMAIN_NAME: "testapi"
+      SUBDOMAIN_NAME: "test"
+      DOMAIN_NAME: "klotspace.com"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@4
+      - name: Load variables from file
+        id: load-vars
+        uses: sergei-b/yaml-load-action@v1.1
+        with:
+          yaml_file: ".github/configs/test_vars.yml"
+
   build-and-push:
     environment: test
+    needs: load-variables
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -58,7 +69,7 @@ jobs:
       - name: Check if build variables changed
         id: changes_vars
         run: |
-          if git diff --quiet HEAD^ HEAD -- .github/workflows/deploy-test.yml; then
+          if git diff --quiet HEAD^ HEAD -- .github/configs/test_vars.yml; then
             echo "no changes in workflow variables"
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
@@ -69,12 +80,13 @@ jobs:
       - name: Build and push Frontend image
         if: steps.changes_frontend.outputs.changed == 'true' || steps.changes_vars.outputs.changed == 'true'
         run: |
-          docker build --build-arg VITE_STRAPI_API_URL=${{ format('https://{0}.{1}', env.API_SUBDOMAIN_NAME, env.DOMAIN_NAME) }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test .
+          docker build --build-arg VITE_STRAPI_API_URL=${{ format('https://{0}.{1}', needs.load-variables.outputs.API_SUBDOMAIN_NAME, needs.load-variables.outputs.DOMAIN_NAME) }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:test
         working-directory: frontend
 
   terraform:
     name: "Terraform"
+    needs: load-variables
     runs-on: ubuntu-latest
     environment: test
 
@@ -85,9 +97,9 @@ jobs:
       TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       TF_VAR_server_name: ${{ vars.TEST_SERVER_NAME }}
-      # TF_VAR_domain_name: ${{ env.DOMAIN_NAME }}
-      # TF_VAR_subdomain_name: ${{ env.SUBDOMAIN_NAME }}
-      # TF_VAR_API_SUBDOMAIN_NAME: ${{ env.API_SUBDOMAIN_NAME }}
+      TF_VAR_domain_name: ${{ needs.load-variables.outputs.DOMAIN_NAME }}
+      TF_VAR_subdomain_name: ${{ needs.load-variables.outputs.SUBDOMAIN_NAME }}
+      TF_VAR_API_SUBDOMAIN_NAME: ${{ needs.load-variables.outputs.API_SUBDOMAIN_NAME }}
       TF_VAR_ssh_key: ${{ secrets.TEST_SSH_PUB_KEY }}
       # TF_VAR_zone_id: ${{ vars.ZONE_ID }}
       # TF_VAR_do_token: ${{ secrets.TEST_DO_TOKEN }}
@@ -105,11 +117,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create variables
-        run: |
-          echo TF_VAR_domain_name=$DOMAIN_NAME >> $GITHUB_ENV
-          echo TF_VAR_subdomain_name=$SUBDOMAIN_NAME >> $GITHUB_ENV
-          echo TF_VAR_api_subdomain_name=$API_SUBDOMAIN_NAME >> $GITHUB_ENV
+      # - name: Create variables
+      #   run: |
+      #     echo TF_VAR_domain_name=$DOMAIN_NAME >> $GITHUB_ENV
+      #     echo TF_VAR_subdomain_name=$SUBDOMAIN_NAME >> $GITHUB_ENV
+      #     echo TF_VAR_api_subdomain_name=$API_SUBDOMAIN_NAME >> $GITHUB_ENV
       # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -151,6 +163,7 @@ jobs:
     needs:
       - terraform
       - build-and-push
+      - load-variables
     runs-on: ubuntu-latest
 
     env:
@@ -159,6 +172,9 @@ jobs:
       DB_NAME: ${{ secrets.TEST_DB_NAME }}
       IMAGE_TAG: "test"
       NODE_ENV: "testing"
+      domain_name: ${{ needs.load-variables.outputs.DOMAIN_NAME }}
+      subdomain_name: ${{ needs.load-variables.outputs.SUBDOMAIN_NAME }}
+      API_SUBDOMAIN_NAME: ${{ needs.load-variables.outputs.API_SUBDOMAIN_NAME }}
       # DOMAIN_NAME: ${{ vars.DOMAIN_NAME }}
       # SUBDOMAIN_NAME: ${{ vars.SUBDOMAIN_NAME }}
       # API_SUBDOMAIN_NAME: ${{ vars.API_SUBDOMAIN_NAME }}
