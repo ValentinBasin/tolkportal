@@ -19,7 +19,7 @@ jobs:
         id: load-vars
         uses: zlatko-ms/varfiletoenv@v3
         with:
-          yaml_file: ".github/configs/test_vars.yml"
+          paths: ".github/configs/test_vars.yml"
 
   build-and-push:
     environment: test
