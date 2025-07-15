@@ -47,7 +47,7 @@
     api_subdomain_name: "{{ lookup('env', 'API_SUBDOMAIN_NAME') }}"
   ansible.builtin.copy:
     content: "client_max_body_size 20M;"
-    dest: /opt/tolkportal/nginx/vhost.d/{{ subdomain_name ~ "." ~ domain_name }}
+    dest: /opt/tolkportal/nginx/vhost.d/{{ api_subdomain_name ~ "." ~ domain_name }}
     owner: tolkportal
     group: tolkportal
     mode: "0700"
