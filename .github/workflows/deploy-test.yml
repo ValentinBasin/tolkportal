@@ -177,8 +177,8 @@ jobs:
       DB_NAME: ${{ secrets.TEST_DB_NAME }}
       IMAGE_TAG: "test"
       NODE_ENV: "testing"
-      domain_name: ${{ needs.load-variables.outputs.DOMAIN_NAME }}
-      subdomain_name: ${{ needs.load-variables.outputs.SUBDOMAIN_NAME }}
+      DOMAIN_NAME: ${{ needs.load-variables.outputs.DOMAIN_NAME }}
+      SUBDOMAIN_NAME: ${{ needs.load-variables.outputs.SUBDOMAIN_NAME }}
       API_SUBDOMAIN_NAME: ${{ needs.load-variables.outputs.API_SUBDOMAIN_NAME }}
       # DOMAIN_NAME: ${{ vars.DOMAIN_NAME }}
       # SUBDOMAIN_NAME: ${{ vars.SUBDOMAIN_NAME }}
