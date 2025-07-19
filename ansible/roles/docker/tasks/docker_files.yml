@@ -24,7 +24,7 @@
     owner: "tolkportal"
     group: "tolkportal"
 
-- name: Create directory
+- name: Create nginx config directory
   ansible.builtin.file:
     path: /opt/tolkportal/nginx
     state: directory
@@ -32,7 +32,7 @@
     owner: tolkportal
     group: tolkportal
 
-- name: Create directory
+- name: Create nginx config subdirectory
   ansible.builtin.file:
     path: /opt/tolkportal/nginx/vhost.d
     state: directory
@@ -40,7 +40,7 @@
     owner: tolkportal
     group: tolkportal
 
-- name: Copy using inline content
+- name: Create nginx config
   vars:
     domain_name: "{{ lookup('env', 'DOMAIN_NAME') }}"
     subdomain_name: "{{ lookup('env', 'SUBDOMAIN_NAME') }}"
