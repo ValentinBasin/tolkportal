@@ -36,7 +36,3 @@ resource "hcloud_server" "server" {
   }
   ssh_keys = [hcloud_ssh_key.github_actions.id]
 }
-
-output "ip_address" {
-  value = hcloud_server.server.ipv4_address
-}

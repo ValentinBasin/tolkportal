@@ -46,15 +46,23 @@ variable "server_name" {
   default = "klot"
 }
 
-# variable "aws_region" {
-#   type = string
-# }
-#
-# variable "backup_bucket_name" {
-#   type = string
-# }
+variable "aws_region" {
+  type = string
+}
+
+variable "backup_bucket_name" {
+  type = string
+}
+
+variable "aws_backup_user" {
+  type = string
+}
 
 variable "ssh_key" {
+  type = string
+}
+
+variable "env" {
   type = string
 }
 
