@@ -41,10 +41,10 @@ variable "api_subdomain_name" {
   default = "api"
 }
 
-variable "server_name" {
-  type    = string
-  default = "klot"
-}
+# variable "server_name" {
+#   type    = string
+#   default = "klot"
+# }
 
 variable "aws_region" {
   type = string
@@ -54,12 +54,22 @@ variable "backup_bucket_name" {
   type = string
 }
 
-variable "aws_backup_user" {
+# variable "aws_backup_user" {
+#   type = string
+# }
+
+variable "media_files_bucket_name" {
   type = string
 }
 
+variable "project_name" {
+  type    = string
+  default = "klot"
+}
+
 variable "ssh_key" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "env" {

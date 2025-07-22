@@ -24,7 +24,7 @@ resource "hcloud_ssh_key" "github_actions" {
 }
 
 resource "hcloud_server" "server" {
-  name        = var.server_name
+  name        = "${var.project_name}-${var.env}"
   image       = var.image
   server_type = var.server_type
   datacenter  = var.datacenter
