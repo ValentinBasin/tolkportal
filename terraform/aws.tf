@@ -82,7 +82,7 @@ resource "aws_s3_bucket" "media_files_bucket" {
 }
 
 resource "aws_s3_bucket_public_access_block" "media_files_block" {
-  bucket                  = aws_s3_bucket.media_files_bucket
+  bucket                  = aws_s3_bucket.media_files_bucket.id
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false
@@ -90,14 +90,14 @@ resource "aws_s3_bucket_public_access_block" "media_files_block" {
 }
 
 resource "aws_s3_bucket_versioning" "media_files_versioning" {
-  bucket = aws_s3_bucket.media_files_bucket
+  bucket = aws_s3_bucket.media_files_bucket.id
   versioning_configuration {
     status = "Enabled"
   }
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "media_files_encryption" {
-  bucket = aws_s3_bucket.media_files_bucket
+  bucket = aws_s3_bucket.media_files_bucket.id
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
@@ -106,7 +106,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "media_files_encry
 }
 
 resource "aws_s3_bucket_cors_configuration" "media_files_cors" {
-  bucket = aws_s3_bucket.media_files_bucket
+  bucket = aws_s3_bucket.media_files_bucket.id
 
   cors_rule {
     allowed_headers = ["*"]
@@ -159,7 +159,7 @@ resource "aws_iam_policy" "media_files_policy" {
 
 resource "aws_iam_user_policy_attachment" "media_files_policy_attachment" {
   user       = aws_iam_user.media_files_user.name
-  policy_arn = aws_iam_policy.media_files_policy
+  policy_arn = aws_iam_policy.media_files_policy.arn
 }
 
 resource "aws_iam_access_key" "media_files_access_key" {
