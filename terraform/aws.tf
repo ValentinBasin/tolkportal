@@ -163,5 +163,5 @@ resource "aws_iam_user_policy_attachment" "media_files_policy_attachment" {
 }
 
 resource "aws_iam_access_key" "media_files_access_key" {
-  user = aws_iam_user.media_files_user
+  user = aws_iam_user.media_files_user.name
 }
