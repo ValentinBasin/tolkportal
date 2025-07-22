@@ -34,7 +34,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "backup_rotation" {
 }
 
 resource "aws_iam_policy" "s3_backup_policy" {
-  name        = "S3BackupPolicy${var.env}"
+  name        = "S3BackupPolicy-${var.env}"
   description = "Policy for server to upload backups to S3"
   policy = jsonencode({
     Version = "2012-10-17"
