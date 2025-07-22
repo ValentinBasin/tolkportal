@@ -101,7 +101,7 @@ jobs:
       AWS_REGION: ${{secrets.AWS_REGION}}
       TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
       TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      TF_VAR_server_name: ${{ vars.TEST_SERVER_NAME }}
+      # TF_VAR_server_name: ${{ vars.TEST_SERVER_NAME }}
       TF_VAR_domain_name: ${{ needs.load-variables.outputs.DOMAIN_NAME }}
       TF_VAR_subdomain_name: ${{ needs.load-variables.outputs.SUBDOMAIN_NAME }}
       TF_VAR_api_subdomain_name: ${{ needs.load-variables.outputs.API_SUBDOMAIN_NAME }}
@@ -109,8 +109,9 @@ jobs:
       # TF_VAR_zone_id: ${{ vars.ZONE_ID }}
       # TF_VAR_do_token: ${{ secrets.TEST_DO_TOKEN }}
       TF_VAR_aws_region: ${{ vars.AWS_REGION }}
-      TF_VAR_backup_bucket_name: ${{ vars.TEST_BACKUP_BUCKET_NAME }}
+      TF_VAR_backup_bucket_name: ${{ vars.BACKUP_BUCKET_NAME }}
       TF_VAR_aws_backup_user: ${{ secrets.AWS_BACKUP_USER }}
+      TF_VAR_media_files_bucket_name: ${{ vars.MEDIA_FILES_BUCKET_NAME }}
       TF_VAR_env: "test"
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
