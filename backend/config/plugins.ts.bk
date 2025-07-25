@@ -1,0 +1,69 @@
+ // Import the type for the S3 upload plugin's config
+import { Config as AwsS3UploadConfig } from '@strapi/provider-upload-aws-s3';
+
+// Define an interface for the environment variables passed to the config function.
+// This helps ensure type safety for `env()` calls.
+interface EnvParams {
+  env: (key: string, defaultValue?: any) => any;
+}
+
+// Define the overall structure of your Strapi plugins configuration.
+// This includes the specific type for the 'upload' plugin.
+interface StrapiPluginsConfig {
+  upload?: {
+    config: AwsS3UploadConfig;
+  };
+  // Add other plugins here if you have them, with their respective types.
+  // Example for another plugin:
+  // 'users-permissions'?: {
+  //   config: {
+  //     jwtSecret: string;
+  //     // ... other config
+  //   };
+  // };
+  // Fallback for any other plugins not explicitly typed:
+  [key: string]: any;
+}
+
+/**
+ * Strapi plugins configuration.
+ *
+ * This function defines how various Strapi plugins are configured,
+ * including the AWS S3 upload provider for media files.
+ *
+ * @param {EnvParams} params - An object containing the `env` function to access environment variables.
+ * @returns {StrapiPluginsConfig} The configured plugins object.
+ */
+const pluginsConfig: (params: EnvParams) => StrapiPluginsConfig = ({ env }) => ({
+  // Configure the upload plugin to use AWS S3
+  upload: {
+    config: {
+      provider: 'aws-s3', // Specifies the S3 provider
+      providerOptions: {
+        // AWS credentials and region are pulled from environment variables for security
+        accessKeyId: env('AWS_ACCESS_KEY_ID'),
+        secretAccessKey: env('AWS_SECRET_ACCESS_KEY'),
+        region: env('AWS_REGION'),
+        params: {
+          // The S3 bucket name where files will be stored
+          Bucket: env('AWS_BUCKET_NAME'),
+        },
+        // Optional: If you're using a CDN like CloudFront, set its URL here.
+        // The files will then be served from the CDN domain instead of direct S3 URL.
+        // baseUrl: env('CDN_URL'),
+        // Optional: If you're using a custom S3-compatible endpoint (e.g., MinIO).
+        // endpoint: env('AWS_S3_ENDPOINT'),
+        // s3ForcePathStyle: true, // Often needed for custom endpoints like MinIO
+      },
+      // Action options for the provider (can be customized if needed)
+      actionOptions: {
+        upload: {},
+        uploadStream: {},
+        delete: {},
+      },
+    },
+  },
+
+// Export the configuration. Strapi expects a CommonJS export,
+// but with TypeScript setup, `export default` is commonly used and then compiled.
+export default pluginsConfig;   });
