@@ -216,6 +216,10 @@ jobs:
           cat -A $GITHUB_WORKSPACE/terraform_outputs.json
           export IP_ADDRESS=$(jq -r '.ip_address.value' ${{ github.workspace }}/terraform_outputs.json)
           echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
+          export AWS_ACCESS_KEY_MEDIAFILES=$(jq -r '.aws_access_key_mediafiles.value' ${{ github.workspace }}/terraform_outputs.json)
+          echo "AWS_ACCESS_KEY_MEDIAFILES=$AWS_ACCESS_KEY_MEDIAFILES" >> $GITHUB_ENV
+          export AWS_SECRET_KEY_MEDIAFILES=$(jq -r '.aws_secret_key_mediafiles.value' ${{ github.workspace }}/terraform_outputs.json)
+          echo "AWS_SECRET_KEY_MEDIAFILES=$AWS_SECRET_KEY_MEDIAFILES >> $GITHUB_ENV
 
       - name: Setup Ansible
         run: |
