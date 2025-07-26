@@ -193,6 +193,8 @@ jobs:
       ADMIN_JWT_SECRET: ${{ secrets.TEST_STRAPI_ADMIN_JWT_SECRET }}
       TRANSFER_TOKEN_SALT: ${{ secrets.TEST_STRAPI_TRANSFER_TOKEN_SALT }}
       JWT_SECRET: ${{ secrets.TEST_STRAPI_JWT_SECRET }}
+      AWS_REGION: ${{secrets.AWS_REGION}}
+      AWS_BUCKET_NAME: ${{ vars.MEDIA_FILES_BUCKET_NAME }}
 
     defaults:
       run:
