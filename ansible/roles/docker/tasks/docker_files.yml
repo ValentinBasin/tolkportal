@@ -22,7 +22,6 @@
     admin_jwt_secret: "{{ lookup('env', 'ADMIN_JWT_SECRET') }}"
     transfer_token_salt: "{{ lookup('env', 'TRANSFER_TOKEN_SALT') }}"
     jwt_secret: "{{ lookup('env', 'JWT_SECRET') }}"
-    aws_bucket_name: "{{ lookup('env', 'AWS_BUCKET_NAME') }}"
   ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: /opt/tolkportal/docker-compose.yml

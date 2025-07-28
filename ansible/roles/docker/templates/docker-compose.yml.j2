@@ -36,7 +36,6 @@ services:
       ADMIN_JWT_SECRET: {{ admin_jwt_secret }}"
       TRANSFER_TOKEN_SALT: {{ transfer_token_salt }}"
       JWT_SECRET: {{ jwt_secret }}"
-      AWS_BUCKET_NAME: {{ aws_bucket_name }}
 
     depends_on:
       - db
