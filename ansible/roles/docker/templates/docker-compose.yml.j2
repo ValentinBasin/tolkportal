@@ -20,7 +20,7 @@ services:
     expose:
       - "1337"
     volumes:
-      - ./media/uploads:/app/public/uploads
+      - ./media/uploads:/opt/app/public/uploads
     environment:
       DATABASE_CLIENT: postgres
       DATABASE_HOST: db
