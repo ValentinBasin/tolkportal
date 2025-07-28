@@ -188,6 +188,11 @@ jobs:
       # API_SUBDOMAIN_NAME: ${{ vars.API_SUBDOMAIN_NAME }}
       SSH_PUB_KEY: ${{ secrets.TEST_SSH_PUB_KEY }}
       LETSENCRYPT_EMAIL: ${{ vars.LETSENCRYPT_EMAIL }}
+      APP_KEYS: ${{ secrets.TEST_STRAPI_APP_KEYS }}
+      API_TOKEN_SALT: ${{ secrets.TEST_STRAPI_API_TOKEN_SALT }}
+      ADMIN_JWT_SECRET: ${{ secrets.TEST_STRAPI_ADMIN_JWT_SECRET }}
+      TRANSFER_TOKEN_SALT: ${{ secrets.TEST_STRAPI_TRANSFER_TOKEN_SALT }}
+      JWT_SECRET: ${{ secrets.TEST_STRAPI_JWT_SECRET }}
 
     defaults:
       run:

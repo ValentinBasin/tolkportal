@@ -17,6 +17,11 @@
     subdomain_name: "{{ lookup('env', 'SUBDOMAIN_NAME') }}"
     api_subdomain_name: "{{ lookup('env', 'API_SUBDOMAIN_NAME') }}"
     letsencrypt_email: "{{ lookup('env', 'LETSENCRYPT_EMAIL') }}"
+    app_keys: "{{ lookup('env', 'APP_KEYS') }}"
+    api_token_salt: "{{ lookup('env', 'API_TOKEN_SALT') }}"
+    admin_jwt_secret: "{{ lookup('env', 'ADMIN_JWT_SECRET') }}"
+    transfer_token_salt: "{{ lookup('env', 'TRANSFER_TOKEN_SALT') }}"
+    jwt_secret: "{{ lookup('env', 'JWT_SECRET') }}"
   ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: /opt/tolkportal/docker-compose.yml
