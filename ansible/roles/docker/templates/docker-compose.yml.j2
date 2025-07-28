@@ -37,8 +37,6 @@ services:
       TRANSFER_TOKEN_SALT: {{ transfer_token_salt }}"
       JWT_SECRET: {{ jwt_secret }}"
       AWS_BUCKET_NAME: {{ aws_bucket_name }}
-      AWS_ACCESS_KEY_MEDIAFILES: "{{ aws_access_key_mediafiles }}"
-      AWS_SECRET_KEY_MEDIAFILES: "{{ aws_secret_key_mediafiles }}"
 
     depends_on:
       - db
