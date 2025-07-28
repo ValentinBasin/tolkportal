@@ -19,8 +19,6 @@ services:
     restart: always
     expose:
       - "1337"
-    volumes:
-      - ./media/uploads:/opt/app/public/uploads
     environment:
       DATABASE_CLIENT: postgres
       DATABASE_HOST: db
