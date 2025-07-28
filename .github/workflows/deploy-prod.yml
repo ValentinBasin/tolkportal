@@ -1,0 +1,259 @@
+name: Deploy Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  load-variables:
+    runs-on: ubuntu-latest
+    outputs:
+      DOMAIN_NAME: ${{ steps.load_vars.outputs.domain_name }}
+      SUBDOMAIN_NAME: ${{ steps.load_vars.outputs.subdomain_name }}
+      API_SUBDOMAIN_NAME: ${{ steps.load_vars.outputs.api_subdomain_name }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Load variables from file
+        id: load_vars
+        run: |
+          DOMAIN_NAME=$(yq e '.DOMAIN_NAME' .github/configs/prod_vars.yml)
+          SUBDOMAIN_NAME=$(yq e '.SUBDOMAIN_NAME' .github/configs/prod_vars.yml)
+          API_SUBDOMAIN_NAME=$(yq e '.API_SUBDOMAIN_NAME' .github/configs/prod_vars.yml)
+
+          echo "DOMAIN_NAME=$DOMAIN_NAME" >> "$GITHUB_OUTPUT"
+          echo "SUBDOMAIN_NAME=$SUBDOMAIN_NAME" >> "$GITHUB_OUTPUT"
+          echo "API_SUBDOMAIN_NAME=$API_SUBDOMAIN_NAME" >> "$GITHUB_OUTPUT"
+
+  build-and-push:
+    environment: test
+    needs: load-variables
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Check if backend changed
+        id: changes_backend
+        run: |
+          if git diff --quiet HEAD^ HEAD -- backend/; then
+            echo "no changes"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes found"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and push Backend image
+        if: steps.changes_backend.outputs.changed == 'true'
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backend:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backend:latest
+        working-directory: backend
+
+      - name: Check if frontend/ changed
+        id: changes_frontend
+        run: |
+          if git diff --quiet HEAD^ HEAD -- frontend/; then
+            echo "no changes"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes found"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check if build variables changed
+        id: changes_vars
+        run: |
+          if git diff --quiet HEAD^ HEAD -- .github/configs/prod_vars.yml; then
+            echo "no changes in workflow variables"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes found in workflow variables"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and push Frontend image
+        if: steps.changes_frontend.outputs.changed == 'true' || steps.changes_vars.outputs.changed == 'true'
+        run: |
+          docker build --build-arg VITE_STRAPI_API_URL=${{ format('https://{0}.{1}', needs.load-variables.outputs.API_SUBDOMAIN_NAME, needs.load-variables.outputs.DOMAIN_NAME) }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:latest
+        working-directory: frontend
+
+  terraform:
+    name: "Terraform"
+    needs: load-variables
+    runs-on: ubuntu-latest
+    environment: test
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      AWS_REGION: ${{secrets.AWS_REGION}}
+      TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
+      TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      # TF_VAR_server_name: ${{ vars.TEST_SERVER_NAME }}
+      TF_VAR_domain_name: ${{ needs.load-variables.outputs.DOMAIN_NAME }}
+      TF_VAR_subdomain_name: ${{ needs.load-variables.outputs.SUBDOMAIN_NAME }}
+      TF_VAR_api_subdomain_name: ${{ needs.load-variables.outputs.API_SUBDOMAIN_NAME }}
+      TF_VAR_ssh_key: ${{ secrets.TEST_SSH_PUB_KEY }}
+      # TF_VAR_zone_id: ${{ vars.ZONE_ID }}
+      # TF_VAR_do_token: ${{ secrets.TEST_DO_TOKEN }}
+      TF_VAR_aws_region: ${{ vars.AWS_REGION }}
+      TF_VAR_backup_bucket_name: ${{ vars.BACKUP_BUCKET_NAME }}
+      TF_VAR_aws_backup_user: ${{ secrets.AWS_BACKUP_USER }}
+      TF_VAR_media_files_bucket_name: ${{ vars.MEDIA_FILES_BUCKET_NAME }}
+      TF_VAR_env: "production"
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: terraform
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # - name: Create variables
+      #   run: |
+      #     echo TF_VAR_domain_name=$DOMAIN_NAME >> $GITHUB_ENV
+      #     echo TF_VAR_subdomain_name=$SUBDOMAIN_NAME >> $GITHUB_ENV
+      #     echo TF_VAR_api_subdomain_name=$API_SUBDOMAIN_NAME >> $GITHUB_ENV
+      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
+
+      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init
+        run: |
+          terraform init \
+          -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}" \
+          -backend-config="key=${{ vars.TF_STATE_KEY }}" \
+          -backend-config="region=${{ vars.TF_STATE_REGION }}"
+
+        # Checks that all Terraform configuration files adhere to a canonical format
+      - name: Terraform Format
+        run: terraform fmt -check
+
+      # Generates an execution plan for Terraform
+      - name: Terraform Plan
+        run: terraform plan -input=false
+
+        # On push to "main", build or change infrastructure according to Terraform configuration files
+        # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+      - name: Terraform Apply
+        run: |
+          terraform apply -auto-approve -input=false
+          terraform output -json > $GITHUB_WORKSPACE/terraform_outputs.json 2>/dev/null
+          cat -A $GITHUB_WORKSPACE/terraform_outputs.json
+          od -c $GITHUB_WORKSPACE/terraform_outputs.json
+
+      - name: Upload Terraform outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-outputs
+          path: ${{ github.workspace }}/terraform_outputs.json
+
+  ansible:
+    needs:
+      - terraform
+      - build-and-push
+      - load-variables
+    runs-on: ubuntu-latest
+
+    env:
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      IMAGE_TAG: "latest"
+      NODE_ENV: "production"
+      DOMAIN_NAME: ${{ needs.load-variables.outputs.DOMAIN_NAME }}
+      SUBDOMAIN_NAME: ${{ needs.load-variables.outputs.SUBDOMAIN_NAME }}
+      API_SUBDOMAIN_NAME: ${{ needs.load-variables.outputs.API_SUBDOMAIN_NAME }}
+      # DOMAIN_NAME: ${{ vars.DOMAIN_NAME }}
+      # SUBDOMAIN_NAME: ${{ vars.SUBDOMAIN_NAME }}
+      # API_SUBDOMAIN_NAME: ${{ vars.API_SUBDOMAIN_NAME }}
+      SSH_PUB_KEY: ${{ secrets.TEST_SSH_PUB_KEY }}
+      LETSENCRYPT_EMAIL: ${{ vars.LETSENCRYPT_EMAIL }}
+      APP_KEYS: ${{ secrets.STRAPI_APP_KEYS }}
+      API_TOKEN_SALT: ${{ secrets.STRAPI_API_TOKEN_SALT }}
+      ADMIN_JWT_SECRET: ${{ secrets.STRAPI_ADMIN_JWT_SECRET }}
+      TRANSFER_TOKEN_SALT: ${{ secrets.STRAPI_TRANSFER_TOKEN_SALT }}
+      JWT_SECRET: ${{ secrets.STRAPI_JWT_SECRET }}
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ansible
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Terraform out
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-outputs
+
+      - name: Read Terraform outputs
+        run: |
+          od -c $GITHUB_WORKSPACE/terraform_outputs.json
+          cat -A $GITHUB_WORKSPACE/terraform_outputs.json
+          export IP_ADDRESS=$(jq -r '.ip_address.value' ${{ github.workspace }}/terraform_outputs.json)
+          echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
+
+      - name: Setup Ansible
+        run: |
+          sudo apt update
+          sudo apt install -y ansible
+
+      - name: Add SSH-key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TEST_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ env.IP_ADDRESS }} >> ~/.ssh/known_hosts
+
+      - name: Check deploy user connection
+        run: ssh -i ~/.ssh/id_ed25519 deploy@${{ env.IP_ADDRESS }} "echo 'Deploy user is available'"
+        continue-on-error: true
+
+      - name: Define root or user modules
+        id: check_user
+        run: |
+          if ssh -i ~/.ssh/id_ed25519 -o BatchMode=yes deploy@${{ env.IP_ADDRESS }} "exit" 2>/dev/null; then
+            echo "user=deploy" >> $GITHUB_ENV
+          else
+            echo "user=root" >> $GITHUB_ENV
+          fi
+        continue-on-error: true
+
+      - name: Run playbook
+        run: ansible-playbook -i ${{ env.IP_ADDRESS }}, playbook.yml -u ${{ env.user }} --private-key ~/.ssh/id_ed25519
+
+      - name: Deploy to Remote Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.IP_ADDRESS }}
+          username: ${{ env.user }}
+          key: ${{ secrets.TEST_SSH_KEY }}
+          script: |
+            sudo -u tolkportal bash -c '
+              cd /opt/tolkportal
+              docker compose pull
+              docker compose up -d
+              docker image prune -f
+            '
