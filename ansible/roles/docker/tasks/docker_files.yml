@@ -23,8 +23,8 @@
     transfer_token_salt: "{{ lookup('env', 'TRANSFER_TOKEN_SALT') }}"
     jwt_secret: "{{ lookup('env', 'JWT_SECRET') }}"
     aws_bucket_name: "{{ lookup('env', 'AWS_BUCKET_NAME') }}"
-    aws_access_key_mediafiles: "{{ lookup('env', 'AWS_ACCESS_KEY_MEDIAFILES') }}"
-    aws_secret_key_mediafiles: "{{ lookup('env', 'AWS_SECRET_KEY_MEDIAFILES') }}"
+    aws_access_key_mediafiles: "{{ lookup('env', 'aws_access_key_mediafiles') }}"
+    aws_secret_key_mediafiles: "{{ lookup('env', 'aws_secret_key_mediafiles') }}"
   ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: /opt/tolkportal/docker-compose.yml
