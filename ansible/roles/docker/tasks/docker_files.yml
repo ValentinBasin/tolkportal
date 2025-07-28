@@ -32,13 +32,13 @@
     owner: "tolkportal"
     group: "tolkportal"
 
-# - name: Create nginx config directory
-#   ansible.builtin.file:
-#     path: /opt/tolkportal/nginx
-#     state: directory
-#     mode: "0700"
-#     owner: tolkportal
-#     group: tolkportal
+- name: Create nginx config directory
+  ansible.builtin.file:
+    path: /opt/tolkportal/nginx
+    state: directory
+    mode: "0700"
+    owner: tolkportal
+    group: tolkportal
 
 - name: Create nginx config subdirectory
   ansible.builtin.file:
@@ -47,7 +47,6 @@
     mode: "0700"
     owner: tolkportal
     group: tolkportal
-    recurse: true
 
 - name: Create nginx config
   vars:
@@ -60,12 +59,3 @@
     owner: tolkportal
     group: tolkportal
     mode: "0700"
-
-- name: Create backend media directory
-  ansible.builtin.file:
-    path: /opt/tolkportal/media/uploads
-    state: directory
-    mode: "0700"
-    owner: tolkportal
-    group: tolkportal
-    recurse: true
