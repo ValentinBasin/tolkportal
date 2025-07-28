@@ -31,11 +31,6 @@ services:
       LETSENCRYPT_HOST: {{ api_subdomain_name ~ "." ~ domain_name }}
       LETSENCRYPT_EMAIL: {{ letsencrypt_email }}
       FRONTEND_URL: https://{{ domain_name if subdomain_name == "@" else subdomain_name ~ "." ~ domain_name }}
-      APP_KEYS: {{ app_keys }}"
-      API_TOKEN_SALT: {{ api_token_salt }}"
-      ADMIN_JWT_SECRET: {{ admin_jwt_secret }}"
-      TRANSFER_TOKEN_SALT: {{ transfer_token_salt }}"
-      JWT_SECRET: {{ jwt_secret }}"
 
     depends_on:
       - db
