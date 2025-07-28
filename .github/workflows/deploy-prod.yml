@@ -248,7 +248,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ env.IP_ADDRESS }}
-          username: ${{ env.user }}
+          username: deploy
           key: ${{ secrets.SSH_KEY }}
           script: |
             sudo -u tolkportal bash -c '
