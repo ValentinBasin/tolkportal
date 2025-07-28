@@ -105,7 +105,7 @@ jobs:
       TF_VAR_domain_name: ${{ needs.load-variables.outputs.DOMAIN_NAME }}
       TF_VAR_subdomain_name: ${{ needs.load-variables.outputs.SUBDOMAIN_NAME }}
       TF_VAR_api_subdomain_name: ${{ needs.load-variables.outputs.API_SUBDOMAIN_NAME }}
-      TF_VAR_ssh_key: ${{ secrets.TEST_SSH_PUB_KEY }}
+      TF_VAR_ssh_key: ${{ secrets.SSH_PUB_KEY }}
       # TF_VAR_zone_id: ${{ vars.ZONE_ID }}
       # TF_VAR_do_token: ${{ secrets.TEST_DO_TOKEN }}
       TF_VAR_aws_region: ${{ vars.AWS_REGION }}
@@ -186,7 +186,7 @@ jobs:
       # DOMAIN_NAME: ${{ vars.DOMAIN_NAME }}
       # SUBDOMAIN_NAME: ${{ vars.SUBDOMAIN_NAME }}
       # API_SUBDOMAIN_NAME: ${{ vars.API_SUBDOMAIN_NAME }}
-      SSH_PUB_KEY: ${{ secrets.TEST_SSH_PUB_KEY }}
+      SSH_PUB_KEY: ${{ secrets.SSH_PUB_KEY }}
       LETSENCRYPT_EMAIL: ${{ vars.LETSENCRYPT_EMAIL }}
       APP_KEYS: ${{ secrets.STRAPI_APP_KEYS }}
       API_TOKEN_SALT: ${{ secrets.STRAPI_API_TOKEN_SALT }}
@@ -223,7 +223,7 @@ jobs:
       - name: Add SSH-key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.TEST_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ env.IP_ADDRESS }} >> ~/.ssh/known_hosts
 
@@ -249,7 +249,7 @@ jobs:
         with:
           host: ${{ env.IP_ADDRESS }}
           username: ${{ env.user }}
-          key: ${{ secrets.TEST_SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
             sudo -u tolkportal bash -c '
               cd /opt/tolkportal

@@ -3,7 +3,7 @@ provider "hcloud" {
 }
 
 resource "hcloud_primary_ip" "ipv4" {
-  name          = "primary_ipv4"
+  name          = "primary_ipv4-${var.env}"
   datacenter    = var.datacenter
   type          = "ipv4"
   assignee_type = "server"
@@ -11,7 +11,7 @@ resource "hcloud_primary_ip" "ipv4" {
 }
 
 resource "hcloud_primary_ip" "ipv6" {
-  name          = "primary_ipv6"
+  name          = "primary_ipv6-${var.env}"
   datacenter    = var.datacenter
   type          = "ipv6"
   assignee_type = "server"
@@ -19,7 +19,7 @@ resource "hcloud_primary_ip" "ipv6" {
 }
 
 resource "hcloud_ssh_key" "github_actions" {
-  name       = "github-actions"
+  name       = "github-actions-${var.env}"
   public_key = var.ssh_key
 }
 
