@@ -17,20 +17,20 @@ function StudioPage() {
             <div className={styles.studio__abstract_blur}></div>
             <div className={styles.ticker}>
               <div className={styles.ticker__wrapper}>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
-                <div className={styles.ticker__item}>ТОЛК</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
+                <div className={styles.ticker__item}>KLOT</div>
               </div>
             </div>
           </div>

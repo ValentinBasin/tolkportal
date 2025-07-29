@@ -1,4 +1,4 @@
-- name: Setup Tolkportal server
+- name: Setup Klotspace server
   hosts: all
   become: true
   roles:

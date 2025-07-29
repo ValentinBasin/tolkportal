@@ -10,7 +10,7 @@ function StudioServices() {
     <>
       <section className={styles.services}>
         <div className="container">
-          <div className={styles.services__title}>Услуги студии Толк:</div>
+          <div className={styles.services__title}>Услуги студии Klot:</div>
 
           <div className={styles.services__grid}>
             {SERVICES_ITEM_DATA.map((item) => (

@@ -18,7 +18,7 @@ function Header() {
       <Container>
         <div className={styles.wrapper}>
           <a href="/" className={styles.logo}>
-            <img src={logo} alt="ТОЛК" />
+            <img src={logo} alt="KLOT" />
           </a>
 
           <Menu isOpen={isOpen} />

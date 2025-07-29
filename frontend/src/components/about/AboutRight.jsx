@@ -3,7 +3,7 @@ import { ABOUT_DATA } from '../../data';
 function AboutRight() {
   return (
     <div className={styles.about__right}>
-      <div className={styles.about__title}>Толк</div>
+      <div className={styles.about__title}>Klot</div>
 
       <div className={styles.about__info}>
         {ABOUT_DATA.map((item, index) => {
