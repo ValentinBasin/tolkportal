@@ -35,7 +35,7 @@ function ContactPage() {
 
               <div className={styles.contacts__links}>
                 <a className={styles.contacts__link} href="">
-                  tolkportal@gmail.com
+                  klotspace@gmail.com
                 </a>
                 <a className={styles.contacts__link} href=""></a>
               </div>

@@ -6,6 +6,7 @@ function Footerleft() {
     width: 215,
     height: 176,
   };
+  const currentYear = new Date().getFullYear();
 
   return (
     <div className={styles.footer_left}>
@@ -18,7 +19,7 @@ function Footerleft() {
       </div>
 
       <div className={styles.footer_left_bottom}>
-        <div className={styles.footer_info}>2023 </div>
+        <div className={styles.footer_info}>{currentYear} </div>
         <div className={styles.footer_info}>© KLOT</div>
         <div className={styles.footer_info}>Все права защищены</div>
         <div className={styles.footer_info}>16+</div>
