@@ -101,7 +101,7 @@ jobs:
           fi
 
       - name: Build and push Backup image
-        if: steps.changes_backend.outputs.changed == 'true'
+        if: steps.changes_backup.outputs.changed == 'true'
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backup:test .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backup:test
