@@ -23,8 +23,8 @@
     transfer_token_salt: "{{ lookup('env', 'TRANSFER_TOKEN_SALT') }}"
     jwt_secret: "{{ lookup('env', 'JWT_SECRET') }}"
     aws_backup_bucket: "{{ lookup('env', 'AWS_BACKUP_BUCKET') }}"
-    aws_access_key_id: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-    aws_secret_access_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    aws_access_key_backup: "{{ lookup('env', 'AWS_ACCESS_KEY_BACKUP') }}"
+    aws_secret_key_backup: "{{ lookup('env', 'AWS_SECRET_KEY_BACKUP') }}"
   ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: /opt/tolkportal/docker-compose.yml
