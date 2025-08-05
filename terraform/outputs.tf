@@ -11,6 +11,10 @@ output "aws_secret_key_backup" {
   sensitive = true
 }
 
+output "aws_backup_bucket" {
+  value = aws_s3_bucket.backup.bucket
+}
+
 output "aws_access_key_mediafiles" {
   value     = aws_iam_access_key.media_files_access_key.id
   sensitive = true
