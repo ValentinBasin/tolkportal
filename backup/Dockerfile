@@ -7,4 +7,4 @@ RUN chmod +x /usr/local/bin/backup.sh
 
 COPY crontab /etc/crontabs/root
 
-CMD ["crond", "-f", "-L", "/dev/stdout"]
+CMD ["crond", "-f"]
