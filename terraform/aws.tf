@@ -44,7 +44,7 @@ resource "aws_iam_policy" "s3_backup_policy" {
         Action = ["s3:PutObject", "s3:ListBucket"]
         Resource = [
           aws_s3_bucket.backup.arn,
-          "${aws_s3_bucket.backup.arn}/backups/*"
+          "${aws_s3_bucket.backup.arn}/backups-db/*"
         ]
       }
     ]
