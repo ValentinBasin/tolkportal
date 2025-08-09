@@ -1,2 +1,2 @@
 MAILTO=""
-0 2 * * * /usr/local/bin/backup.sh >/dev/null
+* * * * * /usr/local/bin/backup.sh 
