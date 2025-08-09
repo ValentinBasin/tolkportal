@@ -7,4 +7,4 @@ RUN chmod +x /usr/local/bin/backup.sh
 
 COPY crontab /etc/crontabs/root
 
-CMD ["crond", "-f"]
+CMD ["sh", "-c", "env > /etc/container.env && crond -f"]

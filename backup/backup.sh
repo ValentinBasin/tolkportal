@@ -1,5 +1,13 @@
 #!/bin/bash
 
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+if [ -f /etc/container.env ]; then
+  set -a
+  source /etc/container.env
+  set +a
+fi
+
 TIMESTAMP=$(date +%Y-%m-%d-%H-%M-%S)
 BACKUP_FILE="${DB_NAME}-${TIMESTAMP}.tar.gz"
 
