@@ -14,10 +14,29 @@ resource "aws_s3_bucket" "backup" {
 resource "aws_s3_bucket_lifecycle_configuration" "backup_rotation" {
   bucket = aws_s3_bucket.backup.id
   rule {
-    id = "backup-rotation"
+    id = "backup-db-rotation"
 
     filter {
-      prefix = "backups/"
+      prefix = "backups-db/"
+    }
+
+    transition {
+      days          = 5
+      storage_class = "GLACIER"
+    }
+
+    expiration {
+      days = 30
+    }
+
+    status = "Enabled"
+  }
+
+  rule {
+    id = "backup-media-rotation"
+
+    filter {
+      prefix = "backups-media/"
     }
 
     transition {
@@ -44,7 +63,8 @@ resource "aws_iam_policy" "s3_backup_policy" {
         Action = ["s3:PutObject", "s3:ListBucket"]
         Resource = [
           aws_s3_bucket.backup.arn,
-          "${aws_s3_bucket.backup.arn}/backups-db/*"
+          "${aws_s3_bucket.backup.arn}/backups-db/*",
+          "${aws_s3_bucket.backup.arn}/backups-media/*",
         ]
       }
     ]

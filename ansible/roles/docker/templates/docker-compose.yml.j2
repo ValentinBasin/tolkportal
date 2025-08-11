@@ -27,6 +27,8 @@ services:
       AWS_SECRET_ACCESS_KEY: {{ aws_secret_key_backup }}
     depends_on:
       - db
+    volumes:
+      - ./data/uploads:/app
     networks:
       - data-network
 
