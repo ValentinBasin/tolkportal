@@ -60,7 +60,7 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backend:latest
         working-directory: backend
 
-      - name: Check if frontend/ changed
+      - name: Check if frontend changed
         id: changes_frontend
         run: |
           if git diff --quiet HEAD^ HEAD -- frontend/; then
@@ -88,6 +88,24 @@ jobs:
           docker build --build-arg VITE_STRAPI_API_URL=${{ format('https://{0}.{1}', needs.load-variables.outputs.API_SUBDOMAIN_NAME, needs.load-variables.outputs.DOMAIN_NAME) }} -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_frontend:latest
         working-directory: frontend
+
+      - name: Check if backup changed
+        id: changes_backup
+        run: |
+          if git diff --quiet HEAD^ HEAD -- backup/; then
+            echo "no changes"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changes found"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build and push Backup image
+        if: steps.changes_backup.outputs.changed == 'true'
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backup:test .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backup:test
+        working-directory: backup
 
   terraform:
     name: "Terraform"
@@ -213,7 +231,13 @@ jobs:
           od -c $GITHUB_WORKSPACE/terraform_outputs.json
           cat -A $GITHUB_WORKSPACE/terraform_outputs.json
           export IP_ADDRESS=$(jq -r '.ip_address.value' ${{ github.workspace }}/terraform_outputs.json)
+          export AWS_ACCESS_KEY_BACKUP=$(jq -r '.aws_access_key_backup.value' ${{ github.workspace }}/terraform_outputs.json)
+          export AWS_SECRET_KEY_BACKUP=$(jq -r '.aws_secret_key_backup.value' ${{ github.workspace }}/terraform_outputs.json)
+          export AWS_BACKUP_BUCKET=$(jq -r '.aws_backup_bucket.value' ${{ github.workspace }}/terraform_outputs.json)
           echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
+          echo "AWS_ACCESS_KEY_BACKUP=$AWS_ACCESS_KEY_BACKUP" >> $GITHUB_ENV
+          echo "AWS_SECRET_KEY_BACKUP=$AWS_SECRET_KEY_BACKUP" >> $GITHUB_ENV
+          echo "AWS_BACKUP_BUCKET=$AWS_BACKUP_BUCKET" >> $GITHUB_ENV
 
       - name: Setup Ansible
         run: |

@@ -27,4 +27,10 @@ BACKUP_FILE="Mediafiles-${TIMESTAMP}.tar.gz"
 BACKUP_PATH="/app"
 
 tar -czvf "$BACKUP_FILE" "$BACKUP_PATH"
-aws s3 cp "${BACKUP_FILE}" "s3://${S3_BUCKET}/backups-media/${BACKUP_FILE}"
+if [ $? -eq 0 ]; then
+  echo "✅ Mediafiles dump completed successfully"
+  aws s3 cp "${BACKUP_FILE}" "s3://${S3_BUCKET}/backups-media/${BACKUP_FILE}"
+  rm "${BACKUP_FILE}"
+else
+  echo "❌ Mediafiles dump completed with error"
+fi
