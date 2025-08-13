@@ -1,4 +1,4 @@
-name: Deploy Test
+name: Deploy Production
 
 on:
   push:
@@ -103,8 +103,8 @@ jobs:
       - name: Build and push Backup image
         if: steps.changes_backup.outputs.changed == 'true'
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backup:test .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backup:test
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backup:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/tolkportal_backup:latest
         working-directory: backup
 
   terraform:

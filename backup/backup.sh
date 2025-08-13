@@ -22,7 +22,7 @@ else
   echo "❌ Postgres dump completed with error"
 fi
 
-# Media files backup
+# Mediafiles backup
 BACKUP_FILE="Mediafiles-${TIMESTAMP}.tar.gz"
 BACKUP_PATH="/app"
 
